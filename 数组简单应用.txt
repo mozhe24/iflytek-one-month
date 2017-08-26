@@ -1,0 +1,195 @@
+/**
+ * Created by admin on 2017/8/11.
+ */
+
+
+
+/**
+import java.util.*;
+public class demo8_11 {
+    public static void main(String[] args)
+    {
+        double[] temperature=new double[7];
+
+        int index;
+        double sum, average;
+        Scanner keyboard=new Scanner(System.in);
+        System.out.println("Enter 7 temperature");
+        sum=0;
+
+        for (index=0;index<7;index++)
+        {
+            temperature[index]=keyboard.nextDouble();
+            sum=sum+temperature[index];
+        }
+        average=sum/7;
+
+        System.out.println("The average temperature is " + average);
+        System.out.println("The temperatures are ");
+        for (index=0;index<7;index++)
+        {
+            if (temperature[index]>average)
+                System.out.println(temperature[index]+ " above average");
+            else if  (temperature[index]<average)
+                System.out.println(temperature[index]+ " below average");
+            else
+                System.out.println(temperature[index]+ "equals the average");
+
+        }
+        System.out.println("Have a nice week! ");
+    }
+}
+**/
+
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
+import java.util.Scanner;
+
+/**
+import java.util.Scanner;
+import java.util.*;
+class SalesAssociate
+{
+    private String name;
+    private double sales;
+
+    public SalesAssociate()
+    {
+        name="No record";
+        sales=0;
+
+    }
+    public SalesAssociate(String initialName,double initialSales)
+    {
+        set(initialName,initialSales);
+    }
+    public void set(String newName,double newSales)
+    {
+        name=newName;
+        sales=newSales;
+    }
+
+    public void readInput()
+    {
+        System.out.print("Enter name of sales associate: ");
+        Scanner keyboard=new Scanner(System.in);
+        name=keyboard.nextLine();
+
+        System.out.print("Enter associate's sales: $");
+        sales=keyboard.nextDouble();
+    }
+
+    public void writeOutput()
+    {
+        System.out.println("Sales associate: "+ name);
+        System.out.println("Sales : $" + sales);
+
+    }
+    public String getName()
+    {
+        return name;
+    }
+
+    public double getSales()
+    {
+        return sales;
+    }
+}
+
+public class demo8_11{
+    private double highest;
+    private double average;
+    private SalesAssociate[] record;
+    private int numberOfAssociates;
+
+    public void getFigures()
+    {
+        Scanner keyboard=new Scanner(System.in);
+        System.out.println("Enter number of sales associates:");
+        numberOfAssociates=keyboard.nextInt();
+        record=new SalesAssociate[numberOfAssociates];
+
+        for (int i=0;i<numberOfAssociates;i++)
+        {
+            record[i]=new SalesAssociate();
+            System.out.println("Enter data for associate: "+ (i+1));
+            record[i].readInput();
+            System.out.println();
+        }
+    }
+
+    public void update()
+    {
+        int i;
+        double nextSales=record[0].getSales();
+        highest=nextSales;
+        double sum= nextSales;
+
+        for (i=1;i<numberOfAssociates;i++)
+        {
+             nextSales=record[i].getSales();
+             sum=sum+nextSales;
+             if (nextSales>highest)   highest=nextSales;
+
+        }
+        average=sum/numberOfAssociates;
+    }
+    public void displayResuls()
+    {
+        System.out.println("Average salse per associate is $ "+average);
+        System.out.println("The highest sales figure is $ "+highest);
+        System.out.println();
+        int i;
+        System.out.println("The following had the highest sales:");
+
+        for (i=0;i<numberOfAssociates;i++)
+        {
+            double nextSales=record[i].getSales();
+            if (nextSales==highest)
+            {
+                record[i].writeOutput();
+                System.out.println("$"+(nextSales-average)+"above the average");
+                System.out.println();
+            }
+        }
+        System.out.println("The rest performed as follows :");
+        for (i=0;i<numberOfAssociates;i++)
+        {
+            double nextSales=record[i].getSales();
+            if(record[i].getSales()!=highest)
+            {
+                record[i].writeOutput();
+                if (nextSales>=average)
+                    System.out.println("$"+(nextSales-average)+" above the average!");
+                else
+                    System.out.println("$"+(average-nextSales)+" below the average!");
+
+                System.out.println();
+            }
+        }
+
+
+
+    }
+
+
+    public static void main(String[] args)
+    {
+        demo8_11 clerk=new demo8_11();
+        clerk.getFigures();
+        clerk.update();
+        clerk.displayResuls();
+    }
+
+}
+
+**/
+
+
+
+
+
+
+}
+
+

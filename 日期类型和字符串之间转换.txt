@@ -1,0 +1,23 @@
+/********************
+ * 日期类型和字符串类型之前的转换
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Demo{
+    public static void main(String[] args) throws ParseException {
+        //这是一个抽象类
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,是本年的第ww周");
+        Date d = new Date(23853489);
+        String str = df.format(d);//将日期转换为字符串
+        System.out.println(str);
+
+        String str2 = "1980-09-09 10:23:13";
+        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d1 = df1.parse(str2);
+        System.out.println(d1);
+    }
+}
+************************/

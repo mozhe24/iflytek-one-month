@@ -1,0 +1,27 @@
+//»º´æ»úÖÆ
+public class DemoP77 {
+    public static void main(String[] args) {
+        int n = 2;
+        int res = 1;
+        while((getOnly(n) + res) != n){
+            res = getOnly(n);
+            ++n;
+        }
+        System.out.println(n);
+    }
+
+    public static int getOnly(int num){
+
+        int number = 0;
+        String str = num + "";
+        if(str.length() > 0){
+            for(int i = 0; i < str.length(); i++){
+                if(str.charAt(i) == '1'){
+                    number++;
+                }
+            }
+        }
+        return number;
+    }
+}
+*****/

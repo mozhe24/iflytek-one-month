@@ -1,0 +1,860 @@
+/******************************************
+ //留意i--与System.out.println()的异常
+class MyThread extends Thread
+{
+    private int i=5;
+
+    @Override
+    public  void run()                      //异常写法
+    //synchronized  public  void run()      //修改版本
+    {
+        System.out.println("i="+(i--)+ "threadName="+Thread.currentThread().getName());
+
+    }
+
+}
+public class Run{
+    public  static void main(String[] args)
+    {
+      MyThread run=new MyThread();
+        Thread t1=new Thread(run);
+        Thread t2=new Thread(run);
+        Thread t3=new Thread(run);
+        Thread t4=new Thread(run);
+        Thread t5=new Thread(run);
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        t5.start();
+
+
+    }
+}
+ 本实验的测试目的：虽然println()方法在内部是同步的，但是i--的操作确实在进入println()之前发生的，
+    所以有发生线程安全问题的概率
+***********************************************/
+
+
+/*************************
+class MyThread extends Thread
+{
+    @Override
+    public void run(){
+
+        super.run();
+        for (int i=0;i<500000;i++)
+        {
+            System.out.println("i="+(i+1));
+
+        }
+    }
+
+}
+public class Run{
+    public static void main(String[] args)
+    {
+        try
+        {
+            MyThread thread=new MyThread();
+            thread.start();
+            Thread.sleep(2000);
+            thread.interrupt();
+
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("main catch");
+            e.printStackTrace();
+        }
+
+    }
+
+
+}
+*******************************************/
+
+//停止线程：this.interrupted()和this.isInterrupted()
+/**************************************
+class MyThread extends Thread
+{
+    @Override
+    public void run()
+    {
+
+        super.run();
+        for (int i=0;i<500000;i++)
+        {
+            System.out.println("i="+(i+1));
+
+        }
+    }
+
+}
+
+public class Run {
+    public static void main(String[] args) {
+        try {
+            MyThread thread=new MyThread();
+            thread.start();
+            Thread.sleep(1000);
+            thread.interrupt();
+            System.out.println(" 是否停止1? ="+thread.interrupted());
+            System.out.println(" 是否停止2? ="+thread.interrupted());
+            //类Run.java虽然是在thread对象上调用一下代码：thread.interrupt()来停止thread对象所代表的线程，在后面又运用了
+            //两个System.out.println()来判断thread对象所代表的线程是否停止，正确的结果应该是：当前线程main从未停止，打印出两个false。
+            // 但是问题出现了：我在自己的电脑上运行的结果是：只打印出i从1-500000的结果，没有打印出" 是否停止1? ="+thread.interrupted()和 是否停止2? ="+thread.interrupted()这两句的状态？？？？
+        }
+        catch (InterruptedException e){
+            System.out.println("main catch");
+            e.printStackTrace();
+
+        }
+        System.out.println("end!");
+
+    }
+}
+******************************************/
+
+
+
+/********************************************
+//实现的结果和预期的一致，同时也验证了：方法interrupted()具有清除状态的功能。换句话说，如果连续两次调用该方法，则第二次调用将
+//返回false，因为在第一次调用已清除了其中断状态。
+class MyThread extends Thread
+{
+    @Override
+    public void run()
+    {
+
+        super.run();
+        for (int i=0;i<500000;i++)
+        {
+            System.out.println("i="+(i+1));
+
+        }
+    }
+
+}
+
+
+public class Run{
+    public static void main(String[] args)
+    {
+        Thread.currentThread().interrupt();
+        System.out.println(" 是否停止1? ="+Thread.interrupted());
+        System.out.println(" 是否停止2? ="+Thread.interrupted());
+        System.out.println("end！");
+    }
+}
+*********************************************/
+
+/**                                              昨天遇到的问题：未解决
+//关于isInterrupted()方法的介绍
+class MyThread extends Thread
+{
+    @Override
+    public void run()
+    {
+
+        super.run();
+        for (int i=0;i<500000;i++)
+        {
+            System.out.println("i="+(i+1));
+
+        }
+    }
+
+}
+
+
+public class Run
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+           MyThread thread=new MyThread();
+            thread.start();
+            thread.interrupt();
+            Thread.sleep(10000);
+
+            System.out.println("是否停止 1？=" + thread.isInterrupted());
+
+            System.out.println("是否停止 2？=" + thread.isInterrupted());
+        }
+        //这里就出现问题了，不管Thread.sleep()里的参数是500还是50000，都不会打印出thread的为true的中断状态？？？？参数<2200不打印中断状态，参数为>2200打印出两个都是false这里是根本没有中断吗？
+        //正确的是在打印1-50000中途打印出“是否停止 1？=true 是否停止 2？=true end”的这种情况，来验证isInterrupted()不会清除中断的状态标识，所以打印两个true。
+        catch (InterruptedException e){
+            System.out.println("main catch");
+            e.printStackTrace();
+
+        }
+        System.out.println("end!");
+    }
+
+}
+**/
+
+
+//能停止的线程——异常法
+/********************************************
+ class MyThread extends Thread {
+    @Override
+    public void run()
+ {
+    super.run();
+    for (int i = 0; i < 500000; i++)
+    {
+        if (this.interrupted())
+        {
+            System.out.println("已经是停止状态了，我要退出了！");
+            break;
+        }
+        System.out.println("i=" + (i + 1));
+    }
+
+ }
+
+ }
+public class Run
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            MyThread thread=new MyThread();
+            thread.start();
+
+            Thread.sleep(1300);
+            thread.interrupt();
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("main catch");
+            e.printStackTrace();
+        }
+        System.out.println("end！");
+    }
+}
+//上面的示例虽然停止了线程，但如果for语句下面还有语句，还是会执行。验证代码如下所示：
+*********************************/
+
+/**********************************
+class MyThread extends Thread {
+    @Override
+    public void run()
+    {
+        super.run();
+        for (int i = 0; i < 500000; i++)
+        {
+            if (this.interrupted())
+            {
+                System.out.println("已经是停止状态了，我要退出了！");
+                break;
+            }
+            System.out.println("i=" + (i + 1));
+        }
+        System.out.println("我被输出，如果此代码是for又继续运行，线程并未停止");
+
+    }
+
+}
+public class Run
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            MyThread thread=new MyThread();
+            thread.start();
+
+            Thread.sleep(1300);
+            thread.interrupt();
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("main catch");
+            e.printStackTrace();
+        }
+        System.out.println("end！");
+    }
+}
+***********************************************/
+
+//如何解决语句线程继续运行的问题？？？如下所示主要是Run()catch到 throw new InterruptedException()抛出的异常，线程才能停止；
+/********************************************
+class MyThread extends Thread
+{
+    @Override
+    public void run()
+    {
+
+        super.run();
+        try {
+            for (int i = 0; i < 500000; i++)
+            {
+                if (this.interrupted())
+                {
+                    System.out.println("已经是停止状态了，我要退出了！");
+                    throw new InterruptedException();
+                }
+                System.out.println("i=" + (i + 1));
+            }
+            System.out.println("我在for下面");
+            }
+            catch (InterruptedException e)
+            {
+                System.out.println("进MyThread.java类run方法中的catch了");
+                e.printStackTrace();
+            }
+    }
+
+}
+public class Run
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            MyThread thread=new MyThread();
+            thread.start();
+
+            Thread.sleep(1300);
+            thread.interrupt();
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("main catch");
+            e.printStackTrace();
+        }
+        System.out.println("end！");
+    }
+}
+*************************************************/
+/*************************************************
+//在沉睡中停止：1、先sleep，再用interrupt()
+class MyThread extends Thread{
+    @Override
+    public void run()
+    {
+       super.run();
+        try{
+            System.out.println("run begin");
+            Thread.sleep(200000);
+            System.out.println("run end");
+        }
+        catch (InterruptedException e){
+            System.out.println("在沉睡中被停止！进入catch！"+this.isInterrupted());
+            e.printStackTrace();
+        }
+    }
+}
+public class Run{
+    public static void main(String[] args){
+        try{
+            MyThread thread=new MyThread();
+            thread.start();
+            Thread.sleep(200);
+            thread.interrupt();
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("main catch");
+            e.printStackTrace();
+        }
+
+
+
+    }
+}
+ ***********************************/
+
+/***********************************
+//在沉睡中停止：2、先interrupt()，再用sleep()
+class MyThread extends Thread{
+    @Override
+    public void run()
+    {
+        super.run();
+        try{
+
+           for (int i=0;i<100;i++)
+           {
+               System.out.println("i="+(i+1));
+           }
+            System.out.println("run begin");
+            Thread.sleep(200000);
+            System.out.println("run end");
+        }
+        catch (InterruptedException e){
+            System.out.println("先停止，再遇到了sleep。进入catch!");
+            e.printStackTrace();
+        }
+    }
+}
+public class Run{
+    public static void main(String[] args)
+    {
+       MyThread thread=new MyThread();
+        thread.start();
+        thread.interrupt();
+      //  System.out.println("继续执行");
+        System.out.println("end");
+    }
+}
+*****************************/
+
+//使用return停止线程：将方法return和interrupt()结合使用也能实现停止线程的效果
+
+
+/*******************
+class MyThread extends Thread{
+    @Override
+    public void run(){
+        while(true)
+        {
+
+            if (this.isInterrupted())
+            {
+                System.out.println("停止了！！！");
+                return;
+
+            }
+            System.out.println("timer="+System.currentTimeMillis());
+        }
+
+
+    }
+}
+public class Run{
+    public  static void main(String[] args) throws InterruptedException{
+        MyThread t= new MyThread();
+        t.start();
+        Thread.sleep(2000);
+        t.interrupt();
+    }
+
+}
+ //以上就是用return来停止线程，不过还是建议使用“抛异常”的方法来实现线程的停止，因为在catch块中还可以将异常向上抛，使得线程停止的事件得以传播
+*************************/
+
+/******************
+ //yield方法的使用
+class MyThread extends Thread{
+    @Override
+    public void run(){
+
+        long beginTime=System.currentTimeMillis();
+        int count=0;
+        for (int i=0;i<50000000;i++)
+        {
+            //Thread.yield();
+            count=count+(i+1);
+        }
+        long endTime=System.currentTimeMillis();
+        System.out.println("用时："+(endTime-beginTime)+" 毫秒！ ");
+    }
+}
+public class Run{
+    public static void main(String[] args){
+
+        MyThread thread=new MyThread();
+        thread.start();
+    }
+}
+****************************/
+//线程的优先级：线程优先级的继承性
+/***************
+class MyThread2 extends Thread{
+    @Override
+    public void run(){
+        System.out.println("MyThread2 run priority="+this.getPriority());
+    }
+}
+class MyThread1 extends Thread{
+    @Override
+    public void run(){
+        System.out.println("MyThread1 run priority="+this.getPriority());
+        MyThread2 thread2=new MyThread2();
+        thread2.start();
+
+
+    }
+}
+public class Run{
+    public static void main(String[] args){
+
+        System.out.println("main thread begin priority="+Thread.currentThread().getPriority());
+        Thread.currentThread().setPriority(6);
+        System.out.println("main thread end priority="+Thread.currentThread().getPriority());
+        MyThread1 thread1 =new MyThread1();
+        thread1.start();
+    }
+
+
+
+}
+
+/*线程优先级具有规则性：
+class MyThread1 extends Thread{
+
+    @Override
+    public void run(){
+
+        long beginTime=System.currentTimeMillis();
+        for (int i=0;i<1000;i++){
+            Random random=new Random();
+            random.nextInt();
+        }
+        long endTime=System.currentTimeMillis();
+        System.out.println("一一一一 Thread1 use time="+(endTime-beginTime));
+    }
+}
+
+class MyThread2 extends Thread{
+
+    @Override
+    public void run(){
+
+        long beginTime=System.currentTimeMillis();
+        for (int i=0;i<1000;i++){
+            Random random=new Random();
+            random.nextInt();
+        }
+        long endTime=System.currentTimeMillis();
+        System.out.println("二二二二 Thread2 use time="+(endTime-beginTime));
+    }
+}
+
+public class Run{
+    public static void main(String[] args)
+    {
+        for (int i=0;i<5;i++){
+            MyThread1 thread1 =new MyThread1();
+            thread1.setPriority(10);
+            thread1.start();
+            MyThread2 thread2 =new MyThread2();
+            thread2.setPriority(1);
+            thread2.start();
+
+        }
+
+    }
+
+}
+ //上述程序的运行结果表明：高优先级的线程总是大部分先执行完，
+ //但不代表高优先级的线程全部先执行完。另外当线程优先级的等级差距很大时，谁先执行完和代码的调用顺序无关
+//此外，线程的优先级还具有“随机性”，也就是说优先级高的线程不一定每一次都先执行完。
+ *******************************************/
+/**守护线程：是一种特殊的线程，当进程中不存在非守护线程，守护线程会自动销毁
+class MyThread extends Thread{
+    private int i=0;
+    @Override
+    public void run(){
+
+        try
+        {
+            while(true)
+            {
+                i++;
+                System.out.println("i="+(i));
+                Thread.sleep(1000);
+            }
+
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+
+public  class Run{
+
+    public static void main(String[] args)
+    {
+        try
+        {
+            MyThread thread=new MyThread();
+            thread.setDaemon(true);
+            thread.start();
+            Thread.sleep(7000);
+            System.out.println("我离开thread对象也不再打印了，也就是停止了~");
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+**/
+
+//方法内的变量为私有，线程安全
+/****
+class HasSelfPrivateNum{
+
+    synchronized public void addI(String username){
+        try{
+            int num=0;
+            if (username.equals("a"))
+            {
+                num=100;
+                System.out.println("a set over!");
+                Thread.sleep(2000);
+            }
+            else
+            {
+                num=200;
+                System.out.println("b set over!");
+            }
+            System.out.println(username+" num="+num);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+}
+
+class ThreadA extends Thread
+{
+    private HasSelfPrivateNum numRef;
+    public ThreadA(HasSelfPrivateNum numRef)
+    {
+        super();
+        this.numRef=numRef;
+    }
+    public void run(){
+        super.run();
+        numRef.addI("a");
+    }
+}
+
+class ThreadB extends Thread
+{
+    private HasSelfPrivateNum numRef;
+    public ThreadB(HasSelfPrivateNum numRef)
+    {
+        super();
+        this.numRef=numRef;
+    }
+    public void run(){
+        super.run();
+        numRef.addI("b");
+    }
+}
+
+public class Run{
+    public static void main(String[] args){
+        HasSelfPrivateNum numRef1=new HasSelfPrivateNum();
+        HasSelfPrivateNum numRef2=new HasSelfPrivateNum();
+        ThreadA athread=new ThreadA(numRef1);
+        athread.start();
+        ThreadB bthread=new ThreadB(numRef2);
+        bthread.start();
+    }
+}
+//可见，方法中的变量不存在非线程安全的问题，永远都是线程安全的。这是方法内部的变量是私有的特性造成的。
+***/
+
+/***************
+//变量的非线程安全
+
+class HasSelfPrivateNum{
+    private int num=0;
+
+   public void addI(String username)//可能会弧线“非线程安全”的问题，换成synchronized  public void addI(String username)
+
+     {
+        try{
+
+            if (username.equals("a"))
+            {
+                num=100;
+                System.out.println("a set over!");
+                Thread.sleep(2000);
+            }
+            else
+            {
+                num=200;
+                System.out.println("b set over!");
+            }
+            System.out.println(username+" num="+num);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+}
+
+class ThreadA extends Thread
+{
+    private HasSelfPrivateNum numRef;
+    public ThreadA(HasSelfPrivateNum numRef)
+    {
+        super();
+        this.numRef=numRef;
+    }
+    public void run(){
+        super.run();
+        numRef.addI("a");
+    }
+}
+
+class ThreadB extends Thread
+{
+    private HasSelfPrivateNum numRef;
+    public ThreadB(HasSelfPrivateNum numRef)
+    {
+        super();
+        this.numRef=numRef;
+    }
+    public void run(){
+        super.run();
+        numRef.addI("b");
+    }
+}
+
+public class Run{
+    public static void main(String[] args){
+        HasSelfPrivateNum numRef=new HasSelfPrivateNum();
+
+        ThreadA athread=new ThreadA(numRef);
+        athread.start();
+        ThreadB bthread=new ThreadB(numRef);
+        bthread.start();
+    }
+}
+***************/
+
+/********************************
+//多个对象多个锁
+
+class HasSelfPrivateNum{
+    private int num=0;
+
+   synchronized public void addI(String username)//可能会弧线“非线程安全”的问题，换成synchronized  public void addI(String username)
+
+    {
+        try{
+
+            if (username.equals("a"))
+            {
+                num=100;
+                System.out.println("a set over!");
+                Thread.sleep(2000);
+            }
+            else
+            {
+                num=200;
+                System.out.println("b set over!");
+            }
+            System.out.println(username+" num="+num);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+}
+class ThreadA extends Thread
+{
+    private HasSelfPrivateNum numRef;
+    public ThreadA(HasSelfPrivateNum numRef)
+    {
+        super();
+        this.numRef=numRef;
+    }
+    @Override
+    public void run(){
+        super.run();
+        numRef.addI("a");
+    }
+}
+
+class ThreadB extends Thread
+{
+    private HasSelfPrivateNum numRef;
+    public ThreadB(HasSelfPrivateNum numRef)
+    {
+        super();
+        this.numRef=numRef;
+    }
+    @Override
+    public void run(){
+        super.run();
+        numRef.addI("b");
+    }
+}
+public class Run{
+    public static void main(String[] args){
+        HasSelfPrivateNum numRef1=new HasSelfPrivateNum();
+        HasSelfPrivateNum numRef2=new HasSelfPrivateNum();
+        ThreadA athread=new ThreadA(numRef1);
+        athread.start();
+        ThreadB bthread=new ThreadB(numRef2);
+        bthread.start();
+    }
+}
+ //关键字synchronized取得的锁都是对象锁，而不是把一段代码或方法（函数）当作锁。
+***********************************/
+
+/*
+//synchronized方法与锁对象
+class MyObject{
+   synchronized public void methodA(){
+        try{
+            System.out.println("begin methodA threadName="+Thread.currentThread().getName());
+            Thread.sleep(5000);
+            System.out.println("end");
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+}
+
+class ThreadA extends Thread{
+    private MyObject object;
+    public ThreadA(MyObject object){
+        super();
+        this.object=object;
+    }
+    @Override
+    public void run(){
+        super.run();
+        object.methodA();
+
+
+
+    }
+}
+class ThreadB extends Thread{
+    private MyObject object;
+    public ThreadB(MyObject object){
+        super();
+        this.object=object;
+    }
+    @Override
+    public void run(){
+        super.run();
+        object.methodA();
+    }
+}
+public class  Run{
+    public static void main(String[] args)
+    {
+        MyObject object=new MyObject();
+        ThreadA a= new ThreadA(object);
+        a.setName("A");
+        ThreadB b=new ThreadB(object);
+        b.setName("B");
+        a.start();
+        b.start();
+    }
+}
+//调用用关键字synchronized声明的方法一定是排队运行的。
+//只有共享对象的读写访问才需要同步化，如果不是共享资源，那么根本就没有同步的必要
+
+
+

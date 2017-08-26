@@ -1,0 +1,364 @@
+/**
+ * Created by admin on 2017/8/9.
+ */
+/************************************
+public class demo8_9 {
+    private String name;
+    private int age;
+    private double weight;
+
+
+    public static void main(String[] args){
+        demo8_9 myDog=new demo8_9();
+        myDog.set("Fido",2,5.5);
+        myDog.writeOutput();
+        System.out.println("Changing name.");
+        myDog.set("Rex");
+        myDog.writeOutput();
+        System.out.println("Changing weight.");
+        myDog.set(6.5);
+        myDog.writeOutput();
+        System.out.println("Changing age.");
+        myDog.set(3);
+        myDog.writeOutput();
+    }
+    public void writeOutput() {
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age + " years");
+        System.out.println("Weight: " + weight + " pounds");
+    }
+    public void set(String newName)
+    {
+        name=newName;
+    }
+    public void set(int newAge){
+        if (newAge<=0)
+        {
+            System.out.println("Error: invalid age");
+            System.exit(0);
+        }
+        else
+            age=newAge;
+    }
+    public void set(double newWeight)
+    {
+        if (newWeight<=0)
+        {
+            System.out.println("Error: invalid weight");
+            System.exit(0);
+        }
+        else
+            weight=newWeight;
+    }
+    public void set(String newName,int newAge,double newWeight)
+    {
+        name=newName;
+        if ((newAge<=0)||(newWeight<=0))
+        {
+            System.out.println("Error: invalid weight");
+            System.exit(0);
+        }
+        else
+        {
+            age=newAge;
+            weight=newWeight;
+        }
+    }
+    public String getName()
+    {
+        return name;
+
+    }
+    public int getAge()
+    {
+        return age;
+    }
+    public double getWeight()
+    {
+        return weight;
+    }
+
+}
+ ********************************/
+//四种重载set方法
+
+import java.util.Scanner;
+
+/********************
+import com.sun.org.apache.xpath.internal.SourceTree;
+
+import java.util.*;
+
+//Objects represent non-negative amounts of money,such as $100, $41.99, $0.05
+
+class Money
+{
+    private long dollars;
+    private long cents;
+
+    public void set(long newDollars)
+    {
+        if (newDollars<0)
+        {
+            System.out.println("ERROR:Negative amounts of money!");
+            System.exit(0);
+        }
+        else
+        {
+            dollars=newDollars;
+            cents=0;
+        }
+    }
+    public void set(double amount)
+    {
+        if (amount<0)
+        {
+            System.out.println("ERROR:Negative amounts of money");
+            System.exit(0);
+        }
+        else
+        {
+            long allCents=Math.round(amount*100);
+            dollars=allCents/100;
+            cents=allCents%100;
+
+        }
+    }
+    public void set(Money otherObject)
+    {
+        this.dollars=otherObject.dollars;
+        this.cents=otherObject.cents;
+    }
+    public void set(String amountString)
+    {
+        String dollarString;
+        String centsString;
+        //Delete '$' if any
+        if (amountString.charAt(0)=='$')
+            amountString=amountString.substring(1);
+        amountString=amountString.trim();
+        //Locate decimal point:
+        int pointLocation=amountString.indexOf(".");
+        if (pointLocation<0)
+        {
+            cents=0;
+            dollars=Long.parseLong(amountString);
+        }
+        else //String has a decimal point.
+        {
+            dollarString=amountString.substring(0,pointLocation);
+            centsString=amountString.substring(pointLocation+1);
+            if (centsString.length()<=1)
+                centsString=centsString+"0";
+            dollars=Long.parseLong(dollarString);
+            cents=Long.parseLong(centsString);
+
+            if ((dollars<0)||(cents<0)||(cents>99))
+            {
+                System.out.println("Error:Illegal representation of money.");
+                System.exit(0);
+            }
+        }
+    }
+    public void readInput()
+    {
+        System.out.println("Enter amount on a line by itself:");
+        Scanner keyboard=new Scanner(System.in);
+        String amount=keyboard.nextLine();
+        set(amount.trim());
+    }
+    public void writeOutput()
+    {
+        System.out.print("$" + dollars );
+        if (cents<10)
+            System.out.print(".0"+cents);
+        else
+            System.out.print("."+cents);
+    }
+    public Money times(int n)
+    {
+        Money product=new Money();
+        product.cents=n*cents;
+        long carryDollars=product.cents/100;
+        product.cents=product.cents%100;
+        product.dollars=n*dollars+carryDollars;
+        return product;
+    }
+    public Money add(Money otherAmount)
+    {
+        Money sum=new Money();
+        sum.cents=this.cents+otherAmount.cents;
+        long carryDollars=sum.cents/100;
+        sum.cents=sum.cents%100;
+        sum.dollars=this.dollars+otherAmount.dollars+carryDollars;
+        return sum;
+
+    }
+
+}
+public class demo8_9
+{
+    public static void main(String[] args)
+    {
+        Money start=new Money();
+        Money goal=new Money();
+
+        System.out.println("Enter your current savings:");
+        start.readInput();
+
+        goal=start.times(2);
+        System.out.print("If you double that,you will have ");
+        goal.writeOutput();
+        System.out.println(", or better yet:");
+        goal=start.add(goal);
+        System.out.println("If you triple that original amount, you will have");
+        goal.writeOutput();
+        System.out.println();
+
+        System.out.println("Remember: A penny saved");
+        System.out.println("is a penny earned.");
+    }
+}
+*********/
+
+class PetRecord
+{
+    private String name;
+    private int age;
+    private double weight;
+
+    public void writeOutput()
+    {
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age +" years");
+        System.out.println("Weight: " + weight + " pounds");
+
+    }
+    public PetRecord(String initialName, int inintialAge, double initialWeight)
+    {
+        name = initialName;
+        if ((inintialAge < 0) || (initialWeight < 0)) {
+            System.out.println("ERROR: Negative age or weight.");
+            System.out.println(0);
+        } else {
+            age = inintialAge;
+            weight = initialWeight;
+        }
+    }
+        public void set(String newName, int newAge, double newWeight)
+        {
+            name=newName;
+            if ((newAge<0)||(newWeight<0))
+            {
+                System.out.println("ERROR:Negative age or weight. ");
+                System.exit(0);
+            }
+            else
+            {
+                age=newAge;
+                weight=newWeight;
+            }
+        }
+        public PetRecord(String initialName)
+        {
+            name=initialName;
+            age=0;
+            weight=0;
+        }
+        public void set(String newName)
+        {
+            name=newName;
+        }
+        public PetRecord(int initialAge)
+        {
+            name="No name yet.";
+                    weight=0;
+            if (initialAge<0)
+            {
+                System.out.println("ERROR:Negative age.");
+                System.exit(0);
+            }
+            else
+                age=initialAge;
+        }
+
+        public void set(int newAge)
+        {
+            if (newAge<0)
+            {
+                System.out.println("ERROR:Negative age.");
+                System.exit(0);
+            }
+            else
+                age=newAge;
+        }
+
+        public PetRecord(double initialWeight)
+        {
+            name="No name yet";
+            age=0;
+            if (initialWeight<0)
+            {
+                System.out.println("ERROR:Negative weight");
+                System.exit(0);
+
+            }
+            else
+                weight=initialWeight;
+        }
+
+        public void set(double newWeight)
+        {
+            if (newWeight<0)
+            {
+                System.out.println("ERROR: Negative weight.");
+                System.exit(0);
+            }
+            else
+                weight=newWeight;
+        }
+
+        public PetRecord()
+        {
+            name="No name yet.";
+            age=0;
+            weight=0;
+        }
+    public String getName()
+    {
+        return name;
+    }
+    public int getAge()
+    {
+        return age;
+    }
+    public double getWeight()
+    {
+        return weight;
+    }
+
+}
+
+public class demo8_9
+{
+    public static void main(String[] args)
+
+    {
+        PetRecord userPet=new PetRecord("Jane Doe");
+        System.out.println("My records on your pet are inaccurate.");
+        System.out.println("Here is what the currently say: ");
+        userPet.writeOutput();
+
+        Scanner keyboard=new Scanner(System.in);
+        System.out.println("Please enter the correct pet name: ");
+        String correctName=keyboard.nextLine();
+
+        System.out.println("Please enter the correct pet age: ");
+        int correctAge=keyboard.nextInt();
+        System.out.println("Please enter the correct pet weight:");
+        double correctWeight=keyboard.nextDouble();
+        userPet.set(correctName,correctAge,correctWeight);
+        System.out.println("My updated records now say: ");
+        userPet.writeOutput();
+    }
+}

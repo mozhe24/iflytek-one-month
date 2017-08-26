@@ -1,0 +1,126 @@
+/***********
+//继承中静态方法的调用
+public class B extends A {
+    public static void prt() {
+        System.out.println("2");
+    }
+
+    public B() {
+        System.out.println("B");
+    }
+
+    public static void main(String[] args) {
+        A a = new B();
+        a = new A();
+    }
+}
+
+class A {
+    public static void prt() {
+        System.out.println("1");
+    }
+
+    public A() {
+        System.out.println("A");
+    }
+}
+**************/
+/***************
+//非静态方法可以被覆盖，静态方法不能被覆盖
+    //非静态方法
+class ClassA {
+    public void printValue(){
+        System.out.println("classA");
+    }
+}
+class ClassB extends ClassA{
+    public void printValue(){
+        System.out.println("classB");
+    }
+}
+public class Test{
+    public static void main(String[] args) {
+        ClassB objectB = new ClassB();
+        objectB.printValue();//这里是对象objectB调用的方法，当然是输出classB
+        ClassA as = (ClassA) objectB;
+        as.printValue();//这里as本来就是ClassB的一个实例，当然也是输出ClassB
+        as = new ClassA();
+        as.printValue();//这里才是ClassA调用方法，输出classA
+    }
+}
+ ********************/
+///////////////////////////////////////////////////////////////////
+//静态方法：这里输出Father Father。这里注意，静态方法是不能被覆盖的，同时
+//它们在内存中的地址空间是固定的，而这里的两个静态方法在内存中占用不同的空间
+//至于具体执行哪一个，则要看是由哪个类来调用，因为是静态方法，
+// 而且两个引用都是father对象的，所以输出Father Father
+/*************
+public class Test{
+    public static void main(String[] args) {
+        Father father = new Father();
+        Father child = new Child();
+        System.out.println(father.getName());
+        System.out.println(child.getName());
+    }
+}
+
+class Father{
+    public static String getName(){
+        return "Father";
+    }
+}
+class Child extends Father{
+    public static String getName(){
+        return "Child";
+    }
+}
+*********************/
+
+/*******************
+//继承关系中，牢记亮点：1.先运行父类的构造函数，再运行子类的；
+                      2.如果子类中有覆盖父类中的方法，因为父类的方法被子类的覆盖，所以就运行子类中的方法，。
+
+public class Demo
+{
+    public static void main(String[] args)
+    {
+        go(new MyBase());
+    }
+
+    public static void go(Base b)
+    {
+        b.add(8);
+    }
+}
+
+class Base
+{
+    int i ;
+    Base()
+    {
+        add(1);
+        System.out.println(i);
+    }
+    void add(int v)
+    {
+        i += v;
+        System.out.println(i);
+    }
+    void print(){
+        System.out.println(i);
+    }
+}
+
+class MyBase extends Base
+{
+    public MyBase()
+    {
+        add(2);
+    }
+    void add(int v)
+    {
+        i += v * 2;
+        System.out.println(i);
+    }
+}
+*******************/

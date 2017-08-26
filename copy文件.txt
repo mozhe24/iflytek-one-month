@@ -1,0 +1,76 @@
+/**
+ * 复制媒体文件,该例子是复制1.mp3文件,列出了四种方式.
+ */
+
+import java.io.*;
+
+public class copyfile
+{
+
+    public static void main(String[] args) throws IOException
+    {
+        /**
+         * 共有四个方法,但建议用demo1,demo2;因为demo3需要创建数组, 如果文件大,光创建数组就需要很多时间;demo4一定也不要用,
+         * 效率非常慢.
+         */
+            //demo1();//1813
+            //demo2();//5224
+            //demo3();//576
+
+
+    }
+/*******************************
+    public static void demo1() throws FileNotFoundException, IOException {
+        FileInputStream fis = new FileInputStream("E:\\copy_src\\1.mp4");
+        FileOutputStream fos = new FileOutputStream("E:\\copy_dest\\demo1.mp4");
+
+        int len = 0;
+        byte[] buf = new byte[1024];
+        long t1=System.currentTimeMillis();
+        while ((len = fis.read(buf)) != -1) {
+            fos.write(buf, 0, len);
+        }
+        fis.close();
+        fos.close();
+        long t2=System.currentTimeMillis();
+        System.out.println(t2-t1);
+    }
+
+
+    public static void demo2() throws IOException {
+        FileInputStream fis = new FileInputStream("E:\\copy_src\\1.mp4");
+        BufferedInputStream bufis = new BufferedInputStream(fis);
+
+        FileOutputStream fos = new FileOutputStream("E:\\copy_dest\\demo2.mp4");
+        BufferedOutputStream bufos = new BufferedOutputStream(fos);
+
+        int len = 0;
+        long t1=System.currentTimeMillis();
+        while ((len = bufis.read()) != -1) {
+            bufos.write(len);
+        }
+        bufis.close();
+        bufos.close();
+        long t2=System.currentTimeMillis();
+        System.out.println(t2-t1);
+    }
+
+
+
+    // 不建议这种方式
+    public static void demo3() throws IOException {
+        FileInputStream fis = new FileInputStream("E:\\copy_src\\1.mp4");
+        FileOutputStream fos = new FileOutputStream("E:\\copy_dest\\demo3.mp4");
+
+        byte[] buf = new byte[fis.available()];
+        long t1 = System.currentTimeMillis();
+        fis.read(buf);
+        fos.write(buf);
+        fos.close();
+        fis.close();
+        long t2 = System.currentTimeMillis();
+        System.out.println(t2 - t1);
+
+    }
+**********************/
+
