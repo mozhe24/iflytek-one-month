@@ -1,0 +1,132 @@
+
+/****
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+
+public class Demo {
+    public static void main(String[] args) {
+        
+        File src = new File("E:/yj/yj.iml");
+        
+        InputStream is = null;
+        try {
+            is = new FileInputStream(src);
+           
+            byte[] buffer = new byte[1024];
+            int len = 0;
+           
+            while((len = is.read(buffer)) != -1){
+               
+                String info = new String(buffer , 0, len);
+                System.out.println(info);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("file not exist");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("read file fail");
+        }finally{
+            
+            if(is != null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("close stream fail");
+                }
+            }
+        }
+    }
+}
+*************/
+
+
+
+
+
+/*************
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+//写出文件
+public class Demo {
+    public static void main(String[] args) {
+        //1、建立联系
+        File dest = new File("E:/yj/test.txt");
+        //2、选择流
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(dest, true);//写出文件，以追加的形式
+            //3、操作
+            String str = "something is so difficult \r\n";
+            //字符串转换成字节数组
+            byte[] data = str.getBytes();
+            os.write(data, 0, data.length);
+            os.flush();//刷新， 如果使用close方法会默认调用此方法
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("文件未找到");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("文件写出失败");
+        }
+        finally{
+                try {
+                    if(os != null){
+                        os.close();//释放资源
+                    }
+            }
+                catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("关闭输出流失败");
+            }
+        }
+    }
+}
+***************************/
+
+/*********************************************
+//IO流实现复制-粘贴的操作
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
+public class Demo{
+
+        public static void main(String[]args){
+
+        // 1、创建源（文件必须存在）+目的地（文件可以不存在）
+        File src=new File("E:/yj/yj.iml");
+        // File src = new File(srcPath);
+        // File dest = new File(destPath);
+        File dest=new File("E:/yj/test2.txt");
+        // 2、选择流
+        try(InputStream is=new FileInputStream(src);
+        OutputStream os=new FileOutputStream(dest);){
+        // 3、文件拷贝=读取+写出
+        byte[]buffer=new byte[1024];
+        int len=0;
+        while((len=is.read(buffer))!=-1){// 读取
+        // 写出
+        os.write(buffer,0,len);
+        }
+        os.flush();
+        }catch(Exception e){
+        e.printStackTrace();
+        }
+        }
+        }
+
+*****************************/
